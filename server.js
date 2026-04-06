@@ -10,7 +10,7 @@ const PHONE_ID = process.env.PHONE_ID;
 // enviar mensaje
 async function enviarMensaje(to, text) {
   await axios.post(
-    https://graph.facebook.com/v20.0/${PHONE_ID}/messages,
+    "https://graph.facebook.com/v20.0/${PHONE_ID}/messages",
     {
       messaging_product: "whatsapp",
       to,
