@@ -18,7 +18,7 @@ async function enviarMensaje(to, text) {
     },
     {
       headers: {
-        Authorization: Bearer ${TOKEN},
+        Authorization: `Bearer ${TOKEN}`,
         "Content-Type": "application/json"
       }
     }
