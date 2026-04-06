@@ -10,7 +10,7 @@ const PHONE_ID = process.env.PHONE_ID;
 // enviar mensaje
 async function enviarMensaje(to, text) {
   await axios.post(
-    "https://graph.facebook.com/v20.0/${PHONE_ID}/messages",
+    `https://graph.facebook.com/v20.0/${PHONE_ID}/messages`,
     {
       messaging_product: "whatsapp",
       to,
@@ -66,7 +66,6 @@ app.post("/webhook", async (req, res) => {
 
   if (texto.toLowerCase().includes("si")) {
     await enviarMensaje(from, "Te conecto con un asesor 👨‍🔧");
-
     console.log("CLIENTE LISTO:", sesion.datos);
     return res.sendStatus(200);
   }
@@ -75,4 +74,6 @@ app.post("/webhook", async (req, res) => {
   res.sendStatus(200);
 });
 
-app.listen(3000, () => console.log("Bot listo"));
+// 🔥 importante para Render
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log("Bot listo en puerto", PORT));
