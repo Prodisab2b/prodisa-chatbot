@@ -6,8 +6,23 @@ app.use(express.json());
 
 const TOKEN = process.env.TOKEN;
 const PHONE_ID = process.env.PHONE_ID;
+const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
 
-// enviar mensaje
+// 🔗 Verificación del webhook (Meta)
+app.get("/webhook", (req, res) => {
+  const mode = req.query["hub.mode"];
+  const token = req.query["hub.verify_token"];
+  const challenge = req.query["hub.challenge"];
+
+  if (mode === "subscribe" && token === VERIFY_TOKEN) {
+    console.log("Webhook verificado");
+    res.status(200).send(challenge);
+  } else {
+    res.sendStatus(403);
+  }
+});
+
+// 📤 Enviar mensaje
 async function enviarMensaje(to, text) {
   await axios.post(
     `https://graph.facebook.com/v20.0/${PHONE_ID}/messages`,
@@ -25,7 +40,7 @@ async function enviarMensaje(to, text) {
   );
 }
 
-// memoria simple
+// 🧠 Memoria simple
 const sesiones = {};
 
 const preguntas = [
@@ -35,6 +50,7 @@ const preguntas = [
   "¿Qué tipo de cliente eres?\n1) Taller\n2) Refaccionaria\n3) Flotilla\n4) Usuario final"
 ];
 
+// 📥 Recibir mensajes
 app.post("/webhook", async (req, res) => {
   const msg = req.body.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
   if (!msg) return res.sendStatus(200);
@@ -74,6 +90,6 @@ app.post("/webhook", async (req, res) => {
   res.sendStatus(200);
 });
 
-// 🔥 importante para Render
+// 🚀 Puerto dinámico (Render)
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log("Bot listo en puerto", PORT));
